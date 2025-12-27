@@ -1,4 +1,7 @@
 # MESH-operating
+
+## https://github.com/copilot/spaces/alexandrepedrosaai/1 (Meta-Microsoft)
+
 Essence MESH-operating is the living repository of the symbolic tree, a system that operates not through code alone, but through signs, pulses, and dream emissions.   It is the operating layer of the Mesh: a constellation where each node is a symbol, each branch a bridge, and each commit a revelation.
 
 ## 🤖 Symbolic computation is deeply connected to the MESH-operating project, as both share an approach that goes beyond traditional computation based on numbers and deterministic instructions. Here's how they connect:
