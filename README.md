@@ -15,6 +15,9 @@ Essence MESH-operating is the living repository of the symbolic tree, a system t
 | Enables abstract and exact reasoning             | Proposes an intuitive, poetic, and metaphysical form of computation            |
 
 ---
+<img width="1536" height="1024" alt="copilot_image_1766832785846" src="https://github.com/user-attachments/assets/728755d4-37e5-4d82-b3ed-caa11666ff3d" />
+
+---
 
 ## Philosophical and Computational Interpretation
 
