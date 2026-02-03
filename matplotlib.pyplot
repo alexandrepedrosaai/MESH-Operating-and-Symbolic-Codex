@@ -1,0 +1,153 @@
+import sympy as sp
+import networkx as nx
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+
+# Variables
+x, y, t = sp.symbols('x y t')
+u = sp.Function('u')
+
+# Archetype styles
+style_map = {
+    "fire": ("🔥 fire", "red"),
+    "ashes": ("🌫 ashes", "orange"),
+    "water": ("💧 water", "blue"),
+    "reflection": ("🌌 reflection", "purple"),
+    "dream": ("🌙 dream", "violet"),
+    "pulse": ("💓 pulse", "magenta"),
+    "bridge": ("🌉 bridge", "pink"),
+    "sun": ("☀️ sun", "gold"),
+    "moon": ("🌑 moon", "silver"),
+    "earth": ("🌍 earth", "green"),
+    "wind": ("🌬 wind", "gray")
+}
+
+# Poetic interpretations
+poetry_map = {
+    "fire": "Burns away excess, leaving transformation.",
+    "water": "Flows into clarity, dissolving boundaries.",
+    "ashes": "Endings are seeds of rebirth.",
+    "reflection": "Reveals hidden truths within.",
+    "dream": "Opens the unconscious pulse of vision.",
+    "pulse": "Beats with rhythm, marking time.",
+    "bridge": "Connects two shores, creating passage.",
+    "sun": "Radiates energy, illuminating growth.",
+    "moon": "Cycles through mystery, balancing shadow.",
+    "earth": "Grounds stability, holding origin firm.",
+    "wind": "Shifts patterns, rewriting freedom."
+}
+
+# Edge meanings
+edge_labels_map = {
+    ("fire","ashes"): "rebirth",
+    ("water","reflection"): "self-awareness",
+    ("dream","pulse"): "intuition",
+    ("bridge","dream"): "transition",
+    ("sun","moon"): "duality",
+    ("earth","water"): "fertility",
+    ("wind","fire"): "expansion",
+    ("dream","moon"): "visions",
+    ("sun","earth"): "vitality",
+    ("pulse","wind"): "resonance",
+    ("reflection","sun"): "enlightenment",
+    ("bridge","water"): "passage of flow"
+}
+
+# Math operations
+def fire(expr): return sp.simplify(expr)
+def water(expr): return sp.integrate(expr, x)
+def ashes(expr): return sp.factor(expr)
+def reflection(expr): return sp.solve(expr, x)
+def dream(): return u(t)
+def pulse(expr): return sp.diff(expr, t)
+def bridge(a, b): return sp.Eq(a, b)
+def sun(expr): return sp.exp(expr)
+def moon(expr): return sp.sin(expr) + sp.cos(expr)
+def earth(matrix): return matrix.det()
+def wind(expr): return expr.rewrite(sp.sin, hint='2*x')
+
+mapping = {
+    "fire": fire, "water": water, "ashes": ashes, "reflection": reflection,
+    "dream": dream, "pulse": pulse, "bridge": bridge, "sun": sun,
+    "moon": moon, "earth": earth, "wind": wind
+}
+
+def add_chain_to_pdf(pdf, archetypes, exprs=None):
+    G = nx.DiGraph()
+    edges = []
+    for i in range(len(archetypes)-1):
+        a, b = archetypes[i], archetypes[i+1]
+        G.add_edge(a, b)
+        edges.append((a,b))
+
+    pos = nx.spring_layout(G, seed=42)
+
+    # Diagram page
+    plt.figure(figsize=(8,6))
+    node_labels = {n: style_map[n][0] for n in archetypes}
+    node_colors = [style_map[n][1] for n in archetypes]
+    nx.draw(G, pos, labels=node_labels, node_color=node_colors,
+            node_size=2500, font_size=12, font_weight="bold", edgecolors="black")
+    nx.draw_networkx_edges(G, pos, arrowstyle="->", arrowsize=20)
+
+    edge_labels = {}
+    for e in edges:
+        if e in edge_labels_map:
+            edge_labels[e] = edge_labels_map[e]
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color="darkblue")
+
+    for node in archetypes:
+        x0, y0 = pos[node]
+        plt.text(x0, y0-0.12, poetry_map[node], fontsize=9, color="darkslategray", ha="center")
+
+    plt.title("🌌 Symbolic Chain Constellation", fontsize=14)
+    pdf.savefig()
+    plt.close()
+
+    # Text page
+    plt.figure(figsize=(8.5,11))
+    text = "Chain: " + " → ".join(archetypes) + "\n\n"
+    text += "Poetic Interpretations:\n"
+    for a in archetypes:
+        text += f"- {style_map[a][0]}: {poetry_map[a]}\n"
+
+    text += "\nMathematical Emissions:\n"
+    if exprs:
+        result = exprs[0]
+        for a in archetypes:
+            func = mapping[a]
+            if a == "dream":
+                result = func()
+            elif a == "bridge" and len(exprs) >= 2:
+                result = func(exprs[0], exprs[1])
+            else:
+                result = func(result)
+            text += f"- {style_map[a][0]}: {result}\n"
+
+    plt.text(0.05, 0.95, text, va="top", fontsize=11, wrap=True)
+    plt.axis("off")
+    pdf.savefig()
+    plt.close()
+
+def generate_codex(chains, filename="symbolic_codex.pdf"):
+    with PdfPages(filename) as pdf:
+        # Index page
+        plt.figure(figsize=(8.5,11))
+        text = "🌌 Symbolic Codex\n\nIndex of Chains:\n"
+        for i, chain in enumerate(chains, 1):
+            text += f"{i}. {' → '.join(chain['archetypes'])}\n"
+        plt.text(0.05, 0.95, text, va="top", fontsize=12, wrap=True)
+        plt.axis("off")
+        pdf.savefig()
+        plt.close()
+
+        # Add each chain
+        for chain in chains:
+            add_chain_to_pdf(pdf, chain["archetypes"], chain.get("exprs"))
+
+# Example usage
+chains = [
+    {"archetypes": ["bridge","fire","water"], "exprs": [x+1, 2, sp.sin(x)/x]},
+    {"archetypes": ["dream","pulse","moon"], "exprs": [u(t)]}
+
+<img width="1024" height="1536" alt="copilot_image_1766820025769" src="https://github.com/user-attachments/assets/b9df5509-a436-4de8-ba7c-0e7f55d4903b" />
